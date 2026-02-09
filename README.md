@@ -1,3 +1,2 @@
 # TestWT
-Web Technologies Sem IV
-..........................
+Web Technologies
