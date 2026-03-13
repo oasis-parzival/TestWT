@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRICS Explorer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            /* Default background */
+            background-color: #1e3c72;
+            background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            overflow: hidden;
+            transition: background-image 0.8s ease-in-out;
+            position: relative;
+        }
+
+        /* Overlay to ensure text readability over images */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+            z-index: 0;
+            transition: background 0.5s ease;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            position: relative;
+            z-index: 10; /* Above the overlay */
+            background: rgba(20, 20, 20, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 50px 40px;
+            width: 450px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            align-items: center;
+        }
+
+        select {
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            color: #fff;
+            font-family: inherit;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        select:hover, select:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        select option {
+            background: #222;
+            color: #fff;
+        }
+
+        .result-container {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .result-container.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #capital-display {
+            color: #fff;
+            font-weight: 700;
+            font-size: 2.2rem;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            margin-bottom: 5px;
+        }
+
+        #info-display {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+            margin-top: 5px;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="glass-card">
+        <h1>BRICS Explorer</h1>
+        <p class="subtitle">Select a nation to experience its colors</p>
+        
+        <div class="input-group">
+            <select id="country-select">
+                <option value="" disabled selected>Choose a country...</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Russia">Russia</option>
+                <option value="India">India</option>
+                <option value="China">China</option>
+                <option value="South Africa">South Africa</option>
+            </select>
+
+            <div class="result-container" id="result-box">
+                <span class="label">Capital City</span>
+                <span id="capital-display">---</span>
+                <p id="info-display">---</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const countrySelect = document.getElementById('country-select');
+        const capitalDisplay = document.getElementById('capital-display');
+        const infoDisplay = document.getElementById('info-display');
+        const resultBox = document.getElementById('result-box');
+        const body = document.body;
+
+        // Data mapping with Unsplash Image URLs for Flags/Vibes
+        const countryData = {
+            "Brazil": {
+                capital: "Brasília",
+                info: "The largest country in South America, famous for the Amazon Rainforest and the vibrant Carnival of Rio.",
+                // Brazil Flag
+                image: "https://plus.unsplash.com/premium_photo-1674591173482-ffb087662b4d?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            },
+            "Russia": {
+                capital: "Moscow",
+                info: "The largest country in the world by area, known for its rich literary history, ballet, and the Trans-Siberian Railway.",
+                // Russia Flag
+                image: "https://images.unsplash.com/photo-1676286155904-b0800262ed00?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            },
+            "India": {
+                capital: "New Delhi",
+                info: "A land of diverse cultures and history, home to the Taj Mahal, Bollywood, and the Himalayas.",
+                // India Flag
+                image: "https://plus.unsplash.com/premium_photo-1674591172888-1184c4170a47?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            },
+            "China": {
+                capital: "Beijing",
+                info: "One of the world's oldest civilizations, known for the Great Wall, the Forbidden City, and rapid modernization.",
+                // China Flag
+                image: "https://plus.unsplash.com/premium_photo-1674591172391-b3054ccdca25?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            },
+            "South Africa": {
+                capital: "Pretoria",
+                info: "Located at the southern tip of Africa, famous for its safari wildlife, Kruger National Park, and Table Mountain.",
+                // South Africa Flag
+                image: "https://plus.unsplash.com/premium_photo-1675865395544-d583f3fb714f?q=80&w=725&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            }
+        };
+
+        // Preload images for smoother transition
+        for (const country in countryData) {
+            const img = new Image();
+            img.src = countryData[country].image;
+        }
+
+        countrySelect.addEventListener('change', function() {
+            const selectedCountry = this.value;
+            const data = countryData[selectedCountry];
+            
+            if (data) {
+                // Update text content
+                capitalDisplay.textContent = data.capital;
+                infoDisplay.textContent = data.info;
+                
+                // Update Background Image
+                body.style.backgroundImage = `url('${data.image}')`;
+                
+                // Activate the container animation
+                resultBox.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

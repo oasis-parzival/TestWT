@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsenal Insights | Tactical & Ballistic Blog</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-orange: #ff6600;
+            --tactical-black: #1a1a1a;
+            --steel-gray: #2d2d2d;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--tactical-black);
+            color: var(--text-light);
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, .navbar-brand {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: 0%; }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* --- Navigation --- */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.9) !important;
+            border-bottom: 2px solid var(--primary-orange);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand span {
+            color: var(--primary-orange);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 102, 0, 0.2);
+            animation: scanline 4s linear infinite;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* --- Blog Cards --- */
+        .blog-card {
+            background: var(--steel-gray);
+            border: none;
+            border-radius: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(255, 102, 0, 0.2);
+        }
+
+        .blog-card img {
+            border-radius: 0;
+            filter: grayscale(30%);
+            transition: 0.5s;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .blog-card:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        .card-body {
+            border-left: 3px solid transparent;
+            transition: 0.3s;
+        }
+
+        .blog-card:hover .card-body {
+            border-left-color: var(--primary-orange);
+        }
+
+        .btn-tactical {
+            background: transparent;
+            color: var(--primary-orange);
+            border: 1px solid var(--primary-orange);
+            border-radius: 0;
+            padding: 10px 25px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-tactical:hover {
+            background: var(--primary-orange);
+            color: white;
+        }
+
+        /* --- New Content Section --- */
+        .field-notes {
+            background: #222;
+            padding: 2rem;
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        /* --- Contact Form --- */
+        .contact-section {
+            background: var(--steel-gray);
+            padding: 3rem;
+            border: 1px solid #444;
+            position: relative;
+        }
+
+        .contact-section::before {
+            content: "SECURE COMMS";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--primary-orange);
+            color: black;
+            padding: 0 10px;
+            font-family: 'Oswald', sans-serif;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .form-control {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            color: var(--text-light);
+            border-radius: 0;
+        }
+
+        .form-control:focus {
+            background: #222;
+            color: white;
+            border-color: var(--primary-orange);
+            box-shadow: none;
+        }
+
+        /* --- Modal Customization --- */
+        .modal-content {
+            background-color: var(--steel-gray);
+            color: var(--text-light);
+            border: 1px solid var(--primary-orange);
+            border-radius: 0;
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid #444;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #444;
+        }
+        
+        .btn-close {
+            filter: invert(1);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: #0a0a0a;
+            padding: 50px 0;
+            border-top: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fs-3" href="#">ARSENAL<span>INSIGHTS</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#">Reviews</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Ballistics</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Training</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Optics</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <video autoplay muted loop playsinline class="hero-video">
+            <source src="Arsenal-BG.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="container fade-in-up">
+            <h1 class="display-2 fw-bold">Precision & Power</h1>
+            <p class="lead mb-4">The Weapon System</p>
+            <a href="#latest" class="btn btn-tactical btn-lg">View Field Reports</a>
+        </div>
+    </header>
+
+    <main class="container my-5" id="latest">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="border-bottom border-secondary pb-2">Latest Reports</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card blog-card">
+                    <img src="https://media.istockphoto.com/id/1360354465/photo/the-hunter-prepares-the-rifle.webp?a=1&b=1&s=612x612&w=0&k=20&c=0Qzmkn0idKSwxfWCWsSFtfngeMWoZ0sZj5P3jvOzWXo=" class="card-img-top" alt="Assault Rifle">
+                    <div class="card-body">
+                        <span class="text-warning small mb-2 d-block">HARDWARE REVIEW</span>
+                        <h5 class="card-title text-white">The Modern Sporting Rifle: 2026 Evolution</h5>
+                        <p class="card-text text-secondary">A breakdown of the latest modular platforms and their performance in the field.</p>
+                        <button class="btn btn-tactical btn-sm" onclick="openModal(1)">Read More</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card blog-card" style="transition-delay: 0.1s;">
+                    <img src="https://media.istockphoto.com/id/494447672/photo/hunting-rifle-with-scope-and-bipod.webp?a=1&b=1&s=612x612&w=0&k=20&c=LVipkb0mHzjCxBq7TUB55Awce-dGZ9YY2sjh0d0dznA=" class="card-img-top" alt="Optics">
+                    <div class="card-body">
+                        <span class="text-warning small mb-2 d-block">TECH & OPTICS</span>
+                        <h5 class="card-title text-white">Low Power Variable Optics vs. Red Dots</h5>
+                        <p class="card-text text-secondary">Choosing the right glass for your mission profile. Speed vs. Versatility.</p>
+                        <button class="btn btn-tactical btn-sm" onclick="openModal(2)">Read More</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card blog-card" style="transition-delay: 0.2s;">
+                    <img src="https://plus.unsplash.com/premium_photo-1683133490684-6749895a7c70?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzN8fGd1biUyMHJhbmdlfGVufDB8fDB8fHww" class="card-img-top" alt="Training">
+                    <div class="card-body">
+                        <span class="text-warning small mb-2 d-block">TRAINING</span>
+                        <h5 class="card-title text-white">Precision Long Range Fundamentals</h5>
+                        <p class="card-text text-secondary">Mastering windage and elevation for targets beyond 800 yards.</p>
+                        <button class="btn btn-tactical btn-sm" onclick="openModal(3)">Read More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Blog Info Section -->
+        <div class="row mt-5">
+            <div class="col-lg-8">
+                <div class="field-notes">
+                    <h3 class="text-white mb-3">Field Notes: Maintenance & Durability</h3>
+                    <p class="text-secondary">
+                        In high-stress environments, the reliability of your equipment is paramount. Regular maintenance cycles, proper lubrication, and understanding the wear patterns of your specific platform can mean the difference between a successful cycle and a malfunction.
+                    </p>
+                    <p class="text-secondary">
+                        We explore the chemistry of modern lubricants and how they interact with carbon buildup in direct impingement systems versus gas piston setups. Understanding your weapon's tolerance stack-up and thermal expansion properties is critical for sustained fire operations.
+                    </p>
+                    <a href="#" class="text-warning text-decoration-none fw-bold">View Full Maintenance Log &rarr;</a>
+                </div>
+            </div>
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="p-4 h-100" style="background: var(--steel-gray); border: 1px solid #333;">
+                    <h4 class="text-warning mb-3">Quick Ballistics</h4>
+                    <ul class="list-unstyled text-secondary">
+                        <li class="mb-3 d-flex justify-content-between border-bottom border-dark pb-2">
+                            <span>5.56mm Velocity</span>
+                            <span class="text-light">~3100 fps</span>
+                        </li>
+                        <li class="mb-3 d-flex justify-content-between border-bottom border-dark pb-2">
+                            <span>7.62mm Drop @ 500yd</span>
+                            <span class="text-light">~50-60 inches</span>
+                        </li>
+                        <li class="mb-3 d-flex justify-content-between border-bottom border-dark pb-2">
+                            <span>Wind Drift (10mph)</span>
+                            <span class="text-light">Variable</span>
+                        </li>
+                        <li class="d-flex justify-content-between">
+                            <span>Standard Mag</span>
+                            <span class="text-light">30 Rounds</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="contact-section">
+                    <div class="row">
+                        <div class="col-md-5 mb-4 mb-md-0">
+                            <h3 class="text-white">Establish Comms</h3>
+                            <p class="text-secondary">Have a question about a specific platform or need consultation on loadouts? Send a secure transmission.</p>
+                            <div class="mt-4">
+                                <p class="text-warning mb-1"><strong>ENCRYPTED CHANNEL</strong></p>
+                                <p class="text-secondary small">Response time: T-Minus 24 Hours</p>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <input type="text" class="form-control" placeholder="Callsign / Name">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input type="email" class="form-control" placeholder="Email Frequency">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <textarea class="form-control" rows="4" placeholder="Mission Brief / Message"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-tactical w-100">TRANSMIT</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center">
+        <div class="container">
+            <h3 class="mb-4">ARSENAL INSIGHTS</h3>
+            <div class="mb-4">
+                <a href="#" class="text-secondary mx-2 text-decoration-none">Privacy Policy</a>
+                <a href="#" class="text-secondary mx-2 text-decoration-none">Terms of Service</a>
+                <a href="#" class="text-secondary mx-2 text-decoration-none">Safety Disclosure</a>
+            </div>
+            <p class="text-muted small">&copy; 2026 Arsenal Insights. All rights reserved. Always follow local laws and safety protocols.</p>
+        </div>
+    </footer>
+
+    <!-- Article Modal -->
+    <div class="modal fade" id="articleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Article Title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalContent" class="text-secondary">Content goes here...</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm rounded-0" data-bs-dismiss="modal">Close Briefing</button>
+                    <button type="button" class="btn btn-tactical btn-sm">Share Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const blogData = {
+            1: {
+                title: "The Modern Sporting Rifle: 2026 Evolution",
+                content: "The 2026 iteration of the modern sporting rifle emphasizes weight reduction without compromising rigidity. New carbon-fiber reinforced polymers are being used in handguards and buffer tubes to shave ounces. <br><br>Furthermore, the shift towards mid-length gas systems as the standard over carbine-length has smoothed out recoil impulses significantly, allowing for faster follow-up shots. We are also seeing a rise in ambidextrous controls becoming standard factory options rather than aftermarket upgrades. <br><br><strong>Key Upgrades:</strong><br>- Monolithic upper receivers<br>- DLC (Diamond-Like Carbon) coated bolt carrier groups<br>- 1:8 Twist rates optimizing 62gr to 77gr projectiles."
+            },
+            2: {
+                title: "Low Power Variable Optics vs. Red Dots",
+                content: "The debate continues. LPVOs (1-6x, 1-8x, 1-10x) offer positive identification capabilities at range that red dots simply cannot match. However, the parallax-free, unlimited eye relief nature of a Red Dot Sight (RDS) remains superior for close-quarters engagements. <br><br>The modern solution often involves offset red dots paired with primary LPVOs, giving the operator the best of both worlds, albeit with a weight penalty. <br><br><strong>Decision Matrix:</strong><br>If your engagement distance is primarily 0-100m, the RDS wins on speed and weight. If you anticipate engagements out to 400m+, the LPVO is mandatory for proper holdovers and identification."
+            },
+            3: {
+                title: "Precision Long Range Fundamentals",
+                content: "Sending a round beyond 800 yards requires more than just expensive glass. It requires a fundamental understanding of ballistics. The Coriolis effect, spin drift, and aerodynamic jump become relevant factors that cannot be ignored. <br><br>This guide breaks down the math of Minute of Angle (MOA) versus Milliradians (MRAD) and helps you build a dope card that actually works in the field. <br><br><strong>The Big 3:</strong><br>1. <em>Stability:</em> Loading the bipod and rear bag management.<br>2. <em>Atmospherics:</em> Reading mirage and wind value.<br>3. <em>Trigger Control:</em> A clean break at the respiratory pause."
+            }
+        };
+
+        function openModal(id) {
+            const data = blogData[id];
+            if (data) {
+                document.getElementById('modalTitle').innerText = data.title;
+                document.getElementById('modalContent').innerHTML = data.content;
+                
+                const myModal = new bootstrap.Modal(document.getElementById('articleModal'));
+                myModal.show();
+            }
+        }
+    </script>
+</body>
+</html>
